@@ -1,0 +1,14 @@
+.fixation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.fixation-cross {
+    font-size: 60px;
+    font-weight: bold;
+    color: #333;
+    user-select: none;
+}

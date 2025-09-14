@@ -1,0 +1,81 @@
+.instructions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+    outline: none;
+}
+
+.instructions-content {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    line-height: 1.6;
+}
+
+.instructions-content p {
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.stimulus-examples {
+    display: flex;
+    justify-content: space-around;
+    margin: 40px 0;
+    padding: 20px;
+}
+
+.example-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #333;
+}
+
+.blue-circle {
+    background-color: #4a90e2;
+}
+
+.orange-circle {
+    background-color: #f5a623;
+}
+
+.instruction-text {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.continue-button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.continue-button:hover {
+    background-color: #357abd;
+}
+
+.continue-button:focus {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
