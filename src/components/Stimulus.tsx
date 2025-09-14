@@ -5,15 +5,19 @@ import './Stimulus.css';
 
 interface StimulusProps {
     trial: TrialData;
+    isFadingOut?: boolean;
 }
 
-export const Stimulus: React.FC<StimulusProps> = ({ trial }) => {
+export const Stimulus: React.FC<StimulusProps> = ({
+    trial,
+    isFadingOut = false,
+}) => {
     const stimulusColor = STIMULUS_CONFIG[trial.stimulus].color;
 
     return (
         <div className='stimulus-container'>
             <div
-                className='stimulus-circle'
+                className={`stimulus-circle ${isFadingOut ? 'fading-out' : ''}`}
                 style={{ backgroundColor: stimulusColor }}
             />
         </div>

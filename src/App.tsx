@@ -4,6 +4,7 @@ import { Welcome } from './components/Welcome';
 import { Instructions } from './components/Instructions';
 import { Fixation } from './components/Fixation';
 import { Stimulus } from './components/Stimulus';
+import { Feedback } from './components/Feedback';
 import { Results } from './components/Results';
 import './App.css';
 
@@ -55,7 +56,27 @@ function App() {
             case 'stimulus':
                 if (state.trialData[state.currentTrial]) {
                     return (
-                        <Stimulus trial={state.trialData[state.currentTrial]} />
+                        <Stimulus
+                            trial={state.trialData[state.currentTrial]}
+                            isFadingOut={state.isFadingOut}
+                        />
+                    );
+                }
+                return <div>Loading...</div>;
+
+            case 'feedback':
+                if (state.feedbackMessage) {
+                    const isCorrect =
+                        state.feedbackMessage === 'Correct!'
+                            ? true
+                            : state.feedbackMessage === 'Incorrect!'
+                            ? false
+                            : undefined;
+                    return (
+                        <Feedback
+                            message={state.feedbackMessage}
+                            isCorrect={isCorrect}
+                        />
                     );
                 }
                 return <div>Loading...</div>;
@@ -90,6 +111,12 @@ function App() {
                             Current stimulus:{' '}
                             {state.trialData[state.currentTrial].stimulus}
                         </p>
+                    )}
+                    {state.feedbackMessage && (
+                        <p>Feedback: {state.feedbackMessage}</p>
+                    )}
+                    {state.isFadingOut && (
+                        <p>Fading: {state.isFadingOut ? 'Yes' : 'No'}</p>
                     )}
                 </div>
             )}

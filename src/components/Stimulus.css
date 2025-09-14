@@ -11,9 +11,36 @@
     height: 200px;
     border-radius: 50%;
     border: 4px solid #333;
-    transition: transform 0.1s ease;
+    transition: opacity 0.3s ease, transform 0.1s ease;
+    animation: stimulusAppear 0.1s ease-out;
+}
+
+.stimulus-circle.fading-out {
+    animation: stimulusFadeOut 0.3s ease-out forwards;
 }
 
 .stimulus-circle:hover {
     transform: scale(1.02);
+}
+
+@keyframes stimulusAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes stimulusFadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }

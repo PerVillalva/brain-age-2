@@ -26,6 +26,7 @@ export type ExperimentPhase =
     | 'test'
     | 'fixation'
     | 'stimulus'
+    | 'feedback'
     | 'results';
 
 export interface ExperimentState {
@@ -34,6 +35,8 @@ export interface ExperimentState {
     trialData: TrialData[];
     showingStimulus: boolean;
     stimulusStartTime?: number;
+    feedbackMessage?: string;
+    isFadingOut?: boolean;
 }
 
 export const STIMULUS_CONFIG = {
@@ -45,5 +48,8 @@ export const EXPERIMENT_CONFIG = {
     repetitions: 5,
     fixationDurations: [250, 500, 750, 1000, 1250, 1500, 1750, 2000],
     validKeys: ['f', 'j'],
-    postTrialGap: 2000,
+    postTrialGap: 500, // Reduced from 2000ms to 500ms for faster pace
+    feedbackDuration: 400, // Show feedback for 400ms
+    fadeOutDuration: 300, // Fade out animation duration
+    stimulusTimeout: 2000, // Auto-advance if no response after 2 seconds
 } as const;

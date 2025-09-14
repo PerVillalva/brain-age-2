@@ -1,0 +1,46 @@
+.feedback-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.feedback-message {
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 20px 40px;
+    border-radius: 10px;
+    animation: feedbackPulse 0.4s ease-out;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    user-select: none;
+}
+
+.feedback-message.correct {
+    background-color: #28a745;
+    color: white;
+}
+
+.feedback-message.incorrect {
+    background-color: #dc3545;
+    color: white;
+}
+
+.feedback-message.timeout {
+    background-color: #6c757d;
+    color: white;
+}
+
+@keyframes feedbackPulse {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
