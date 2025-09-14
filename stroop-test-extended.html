@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stroop Card Switch Test</title>
+    <script src="https://unpkg.com/jspsych@8.2.2"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@2.1.0"></script>
+    <link href="https://unpkg.com/jspsych@8.2.2/css/jspsych.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      }
+      .stroop-stimulus {
+        font-size: 48px;
+        font-weight: bold;
+        text-align: center;
+        margin: 50px 0;
+      }
+      .instructions-text {
+        font-size: 18px;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: left;
+      }
+      .color-cards {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 30px 0;
+      }
+      .color-card {
+        width: 80px;
+        height: 80px;
+        border: 3px solid #333;
+        border-radius: 12px;
+      }
+      .jspsych-btn {
+        width: 80px;
+        height: 80px;
+        border: 3px solid #333;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin: 10px;
+      }
+      .jspsych-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      }
+    </style>
+  </head>
+  <body></body>
+
+  <script>
+    /* Global variable to store difficulty */
+    let difficulty = 'easy'; // default
+
+    /* initialize jsPsych */
+    const jsPsych = initJsPsych({
+      on_finish: function() {
+        jsPsych.data.displayData();
+      }
+    });
+
+    /* create timeline */
+    const timeline = [];
+
+    /* 1. Welcome Message */
+    const welcome = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: `
+        <div class="instructions-text">
+          <h1 style="text-align: center;">Welcome to the Stroop Test</h1>
+          <p>This experiment tests your ability to respond to colors while ignoring words.</p>
+          <p style="text-align: center; margin-top: 40px;">Press any key to continue.</p>
+        </div>
+      `
+    };
+    timeline.push(welcome);
+
+    /* 2. Difficulty Selection */
+    const difficulty_selection = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `
+        <div class="instructions-text">
+          <h2 style="text-align: center;">Choose Difficulty Level</h2>
+          <div style="margin: 40px 0;">
+            <div style="background-color: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+              <h3 style="color: #2d5a2d; margin-top: 0;">Easy Version</h3>
+              <p><strong>Rule:</strong> Always respond to the <strong>ink color</strong> of the text, ignore the word.</p>
+              <p>Example: If you see <span style="color: blue; font-weight: bold;">RED</span>, click the blue button.</p>
+            </div>
+            <div style="background-color: #ffe8e8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+              <h3 style="color: #8b2635; margin-top: 0;">Hard Version</h3>
+              <p><strong>Rules:</strong></p>
+              <ul>
+                <li>If text has a <strong>black background</strong> respond to the <strong>WORD</strong></li>
+                <li>If text has a <strong>grey background</strong> respond to the <strong>INK COLOR</strong></li>
+              </ul>
+              <p>This requires constant attention to background color and switching between word and color responses!</p>
+            </div>
+          </div>
+          <p style="text-align: center; font-size: 18px; margin-top: 30px;">Choose your difficulty level:</p>
+        </div>
+      `,
+      choices: ['Easy Version', 'Hard Version'],
+      button_html: function(choice, i) {
+        const colors = ['#28a745', '#dc3545'];
+        return `<button class="jspsych-btn" style="
+          background-color: ${colors[i]}; 
+          color: white; 
+          width: 200px; 
+          height: 60px; 
+          font-size: 18px; 
+          font-weight: bold;
+          border: none;
+          border-radius: 10px;
+          margin: 20px;
+          cursor: pointer;
+        ">${choice}</button>`;
+      },
+      on_finish: function(data) {
+        difficulty = data.response === 0 ? 'easy' : 'hard';
+        console.log('Selected difficulty:', difficulty);
+      }
+    };
+    timeline.push(difficulty_selection);
+
+    /* 3. Instructions */
+    const instructions = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function() {
+        if (difficulty === 'easy') {
+          return `
+            <div class="instructions-text">
+              <h2 style="text-align: center;">Instructions - Easy Version</h2>
+              <p>You will see color words (like RED, BLUE, etc.) displayed on the screen. Your task is to respond to the <strong>INK COLOR</strong> of the text, not the word itself.</p>
+              
+              <p>For example, if the word <strong style="color: blue;">RED</strong> appears, you should choose <strong>BLUE</strong>.</p>
+              
+              <p>Click on the color card that matches the <strong>INK COLOR</strong> of the text:</p>
+              <div class="color-cards">
+                <div class="color-card" style="background-color: red;"></div>
+                <div class="color-card" style="background-color: blue;"></div>
+                <div class="color-card" style="background-color: green;"></div>
+                <div class="color-card" style="background-color: #DAA520;"></div>
+              </div>
+              <p style="text-align: center; font-size: 14px;">Red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Blue &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Green &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Yellow</p>
+              
+              <p>Try to be as fast and accurate as possible.</p>
+              <p style="text-align: center; margin-top: 40px;">Press any key when you're ready to begin.</p>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="instructions-text">
+              <h2 style="text-align: center;">Instructions - Hard Version</h2>
+              <p><strong style="color: #dc3545;">PAY ATTENTION TO THE BACKGROUND!</strong></p>
+              
+              <div style="background-color: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3>Rules:</h3>
+                <ul style="font-size: 18px; line-height: 2;">
+                  <li><strong>Black background:</strong> Click the button that matches the <strong>WORD</strong></li>
+                  <li><strong>Grey background:</strong> Click the button that matches the <strong>INK COLOR</strong></li>
+                </ul>
+              </div>
+              
+              <div style="margin: 30px 0;">
+                <h3>Examples:</h3>
+                <div style="background-color: black; color: blue; padding: 15px; margin: 10px 0; border-radius: 5px; text-align: center; font-size: 24px; font-weight: bold;">RED</div>
+                <p style="text-align: center;">Black background: Answer the WORD, Click <strong>RED</strong></p>
+                
+                <div style="background-color: #808080; color: blue; padding: 15px; margin: 10px 0; border-radius: 5px; text-align: center; font-size: 24px; font-weight: bold;">RED</div>
+                <p style="text-align: center;">Grey background: Answer the INK COLOR, Click <strong>BLUE</strong></p>
+              </div>
+              
+              <p>Available color choices:</p>
+              <div class="color-cards">
+                <div class="color-card" style="background-color: red;"></div>
+                <div class="color-card" style="background-color: blue;"></div>
+                <div class="color-card" style="background-color: green;"></div>
+                <div class="color-card" style="background-color: #DAA520;"></div>
+              </div>
+              <p style="text-align: center; font-size: 14px;">Red &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Blue &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Green &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Yellow</p>
+              
+              <p style="text-align: center; color: #dc3545; font-weight: bold;">This is challenging! Pay close attention to the background color.</p>
+              <p style="text-align: center; margin-top: 40px;">Press any key when you're ready to begin.</p>
+            </div>
+          `;
+        }
+      },
+      post_trial_gap: 1000,
+      on_finish: function() {
+        // Add the test procedure to the timeline after difficulty is selected
+        timeline.push(createTestProcedure());
+      }
+    };
+    timeline.push(instructions);
+
+    /* 4. Define Trial Stimuli */
+    const easy_test_stimuli = [
+      // Congruent trials (word matches ink color)
+      { word: "RED",    color: "red",     correct_response: 0, condition: 'congruent' },
+      { word: "BLUE",   color: "blue",    correct_response: 1, condition: 'congruent' },
+      { word: "GREEN",  color: "green",   correct_response: 2, condition: 'congruent' },
+      { word: "YELLOW", color: "#DAA520", correct_response: 3, condition: 'congruent' },
+      { word: "RED",    color: "red",     correct_response: 0, condition: 'congruent' },
+      { word: "BLUE",   color: "blue",    correct_response: 1, condition: 'congruent' },
+      { word: "GREEN",  color: "green",   correct_response: 2, condition: 'congruent' },
+      { word: "YELLOW", color: "#DAA520", correct_response: 3, condition: 'congruent' },
+      { word: "RED",    color: "red",     correct_response: 0, condition: 'congruent' },
+      { word: "BLUE",   color: "blue",    correct_response: 1, condition: 'congruent' },
+      
+      // Incongruent trials (word and ink color mismatch)
+      { word: "RED",    color: "blue",    correct_response: 1, condition: 'incongruent' },
+      { word: "BLUE",   color: "green",   correct_response: 2, condition: 'incongruent' },
+      { word: "GREEN",  color: "#DAA520", correct_response: 3, condition: 'incongruent' },
+      { word: "YELLOW", color: "red",     correct_response: 0, condition: 'incongruent' },
+      { word: "RED",    color: "green",   correct_response: 2, condition: 'incongruent' },
+      { word: "BLUE",   color: "#DAA520", correct_response: 3, condition: 'incongruent' },
+      { word: "GREEN",  color: "red",     correct_response: 0, condition: 'incongruent' },
+      { word: "YELLOW", color: "blue",    correct_response: 1, condition: 'incongruent' },
+      { word: "RED",    color: "#DAA520", correct_response: 3, condition: 'incongruent' },
+      { word: "BLUE",   color: "red",     correct_response: 0, condition: 'incongruent' }
+    ];
+
+    const hard_test_stimuli = [
+      // Black background trials - respond to WORD
+      // Congruent: word and color match (but we're responding to word)
+      { word: "RED",    color: "red",     background: "black", task_rule: "word", correct_response: 0, condition: 'word_congruent' },
+      { word: "BLUE",   color: "blue",    background: "black", task_rule: "word", correct_response: 1, condition: 'word_congruent' },
+      { word: "GREEN",  color: "green",   background: "black", task_rule: "word", correct_response: 2, condition: 'word_congruent' },
+      { word: "YELLOW", color: "#DAA520", background: "black", task_rule: "word", correct_response: 3, condition: 'word_congruent' },
+      { word: "RED",    color: "red",     background: "black", task_rule: "word", correct_response: 0, condition: 'word_congruent' },
+      
+      // Incongruent: word and color don't match (but we're responding to word)
+      { word: "RED",    color: "blue",    background: "black", task_rule: "word", correct_response: 0, condition: 'word_incongruent' },
+      { word: "BLUE",   color: "green",   background: "black", task_rule: "word", correct_response: 1, condition: 'word_incongruent' },
+      { word: "GREEN",  color: "#DAA520", background: "black", task_rule: "word", correct_response: 2, condition: 'word_incongruent' },
+      { word: "YELLOW", color: "red",     background: "black", task_rule: "word", correct_response: 3, condition: 'word_incongruent' },
+      { word: "BLUE",   color: "red",     background: "black", task_rule: "word", correct_response: 1, condition: 'word_incongruent' },
+      
+      // Grey background trials - respond to COLOR
+      // Congruent: word and color match (and we're responding to color)
+      { word: "RED",    color: "red",     background: "#808080", task_rule: "color", correct_response: 0, condition: 'color_congruent' },
+      { word: "BLUE",   color: "blue",    background: "#808080", task_rule: "color", correct_response: 1, condition: 'color_congruent' },
+      { word: "GREEN",  color: "green",   background: "#808080", task_rule: "color", correct_response: 2, condition: 'color_congruent' },
+      { word: "YELLOW", color: "#DAA520", background: "#808080", task_rule: "color", correct_response: 3, condition: 'color_congruent' },
+      { word: "RED",    color: "red",     background: "#808080", task_rule: "color", correct_response: 0, condition: 'color_congruent' },
+      
+      // Incongruent: word and color don't match (and we're responding to color)
+      { word: "RED",    color: "blue",    background: "#808080", task_rule: "color", correct_response: 1, condition: 'color_incongruent' },
+      { word: "BLUE",   color: "green",   background: "#808080", task_rule: "color", correct_response: 2, condition: 'color_incongruent' },
+      { word: "GREEN",  color: "#DAA520", background: "#808080", task_rule: "color", correct_response: 3, condition: 'color_incongruent' },
+      { word: "YELLOW", color: "red",     background: "#808080", task_rule: "color", correct_response: 0, condition: 'color_incongruent' },
+      { word: "BLUE",   color: "red",     background: "#808080", task_rule: "color", correct_response: 0, condition: 'color_incongruent' }
+    ];
+
+    /* 4. Define Trial Structure */
+    const fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: "NO_KEYS",
+      trial_duration: function(){
+        return jsPsych.randomization.sampleWithoutReplacement([500, 750, 1000], 1)[0];
+      },
+      data: {
+        task: 'fixation'
+      }
+    };
+
+    // Define color choices as array of color values only
+    const color_choices = [
+      'red',
+      'blue',
+      'green',
+      '#DAA520'
+    ];
+
+    const test = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: function() {
+        // Use jsPsych.evaluateTimelineVariable() inside functions
+        const word = jsPsych.evaluateTimelineVariable('word');
+        const color = jsPsych.evaluateTimelineVariable('color');
+        
+        if (difficulty === 'easy') {
+          return `<div class='stroop-stimulus' style='color: ${color};'>${word}</div>`;
+        } else {
+          // Hard version - include background
+          const background = jsPsych.evaluateTimelineVariable('background');
+          return `<div class='stroop-stimulus' style='color: ${color}; background-color: ${background}; padding: 30px; border-radius: 10px;'>${word}</div>`;
+        }
+      },
+      choices: color_choices,
+      button_html: function(choice, i) {
+        // Show only colored button, no label
+        return `<button class="jspsych-btn" style="background-color: ${choice}; width: 80px; height: 80px; border: 3px solid #333; border-radius: 12px; margin: 10px;"></button>`;
+      },
+      data: {
+        task: 'response',
+        word: jsPsych.timelineVariable('word'),
+        color: jsPsych.timelineVariable('color'),
+        condition: jsPsych.timelineVariable('condition'),
+        correct_response: jsPsych.timelineVariable('correct_response')
+      },
+      on_finish: function(data){
+        data.correct = data.response == data.correct_response;
+      }
+    };
+
+    /* 5. Create the Main Test Block - will be added to timeline after difficulty selection */
+    function createTestProcedure() {
+      const test_procedure = {
+        timeline: [fixation, test],
+        timeline_variables: difficulty === 'easy' ? easy_test_stimuli : hard_test_stimuli,
+        randomize_order: true,
+        on_timeline_finish: function() {
+          // Add debrief block after test completion
+          timeline.push(debrief_block);
+        }
+      };
+      return test_procedure;
+    }
+
+    /* 6. Age Prediction Model */
+    class SSCTAgePredictionModel {
+      constructor() {
+        // Coefficients derived from multiple linear regression on data from Belghali et al. (2022)
+        // Model: Age = intercept + (time_coeff * SSCT_TIME) + (error_coeff * SSCT_ERROR) + (difficulty_adj)
+        this.intercept = 21.36;
+        this.time_coeff = 0.11;
+        this.error_coeff = 3.66;
+        this.difficulty_adjustment = {
+          easy: 0,      // No adjustment for easy version
+          hard: -2.5    // Subtract from predicted age for hard version (accounts for increased difficulty)
+        };
+      }
+
+      /**
+       * Predicts age based on SSCT time, errors, and difficulty level.
+       * @param {number} totalTime - The total time taken to complete the test in seconds.
+       * @param {number} numErrors - The total number of errors made.
+       * @param {string} difficulty - The difficulty level ('easy' or 'hard').
+       * @returns {number} The predicted age.
+       */
+      predictAge(totalTime, numErrors, difficulty = 'easy') {
+        if (totalTime < 0 || numErrors < 0) {
+          throw new Error("Time and errors cannot be negative.");
+        }
+
+        const base_prediction = this.intercept + (this.time_coeff * totalTime) + (this.error_coeff * numErrors);
+        const difficulty_adj = this.difficulty_adjustment[difficulty] || 0;
+        const prediction = base_prediction + difficulty_adj;
+
+        // Ensure the predicted age is not below the study's minimum age.
+        return Math.max(15, prediction);
+      }
+
+      getModelEquation(difficulty = 'easy') {
+        const adj = this.difficulty_adjustment[difficulty] || 0;
+        const adj_text = adj !== 0 ? ` + (${adj})` : '';
+        return `Age = ${this.intercept} + (${this.time_coeff} × Time) + (${this.error_coeff} × Errors)${adj_text}`;
+      }
+    }
+
+    /* 7. Debrief and Results */
+    const debrief_block = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: function() {
+        const trials = jsPsych.data.get().filter({ task: 'response' });
+        const correct_trials = trials.filter({ correct: true });
+        const incorrect_trials = trials.filter({ correct: false });
+
+        // Calculate total time, total errors, and total trials for the model
+        const totalTimeInSeconds = trials.select('rt').sum() / 1000; // Convert from ms to seconds
+        const totalErrors = incorrect_trials.count();
+        const totalTrials = trials.count();
+        const accuracy = Math.round(correct_trials.count() / totalTrials * 100) || 0;
+        const rt = Math.round(correct_trials.select('rt').mean()) || 0;
+        
+        // Create age prediction model and predict age
+        const ageModel = new SSCTAgePredictionModel();
+        const predictedAge = ageModel.predictAge(totalTimeInSeconds, totalErrors, difficulty);
+
+        // Calculate stats by condition
+        const congruent_trials = trials.filter({condition: 'congruent'});
+        const congruent_correct = congruent_trials.filter({correct: true});
+        const congruent_accuracy = Math.round(congruent_correct.count() / congruent_trials.count() * 100) || 0;
+        const congruent_rt = Math.round(congruent_correct.select('rt').mean()) || 0;
+        
+        const incongruent_trials = trials.filter({condition: 'incongruent'});
+        const incongruent_correct = incongruent_trials.filter({correct: true});
+        const incongruent_accuracy = Math.round(incongruent_correct.count() / incongruent_trials.count() * 100) || 0;
+        const incongruent_rt = Math.round(incongruent_correct.select('rt').mean()) || 0;
+
+        return `
+          <div class="instructions-text">
+            <h2 style="text-align: center;">Results - ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Version</h2>
+            
+            <div style="background-color: #e8f4fd; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+              <h3 style="color: #0066cc; margin-top: 0;">Age Prediction</h3>
+              <p style="font-size: 24px; font-weight: bold; color: #0066cc; margin: 10px 0;">
+                Your predicted age is: ${Math.round(predictedAge)} years
+              </p>
+              <p style="font-size: 14px; color: #666;">
+                Based on a completion time of ${totalTimeInSeconds.toFixed(1)} seconds and ${totalErrors} errors (${difficulty} version)
+              </p>
+              <p style="font-size: 12px; color: #888; margin-top: 15px;">
+              </p>
+              <p style="font-size: 12px; color: #888; margin-top: 5px;">
+                <em>Note: This prediction is based on research by Belghali et al. (2022) and is for entertainment purposes only.</em>
+              </p>
+            </div>
+            
+            <h3>Performance Summary:</h3>
+            <p><strong>Overall Accuracy:</strong> ${accuracy}%</p>
+            <p><strong>Total Completion Time:</strong> ${totalTimeInSeconds.toFixed(1)} seconds</p>
+            <p><strong>Average Response Time:</strong> ${rt}ms</p>
+            <p><strong>Total Errors:</strong> ${totalErrors} out of ${totalTrials} trials</p>
+            <hr>
+            <h3>Performance by Condition:</h3>
+            <p><strong>Congruent Trials:</strong> ${congruent_accuracy}% accuracy, ${congruent_rt}ms avg. response time</p>
+            <p><strong>Incongruent Trials:</strong> ${incongruent_accuracy}% accuracy, ${incongruent_rt}ms avg. response time</p>
+            <hr>
+            <p>The <strong>Stroop Effect</strong> is the difference in performance between conditions. 
+            Typically, people are faster and more accurate on congruent trials because the word and color match, causing less mental interference.</p>
+            
+            <p style="text-align: center; margin-top: 40px;">Press any key to see the raw data.</p>
+          </div>
+        `;
+      }
+    };
+
+    /* 7. Start the Experiment */
+    jsPsych.run(timeline);
+
+  </script>
+</html>

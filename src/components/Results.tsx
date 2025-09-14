@@ -5,9 +5,14 @@ import './Results.css';
 interface ResultsProps {
     metrics: PerformanceMetrics;
     onRestart: () => void;
+    onBackToMenu?: () => void;
 }
 
-export const Results: React.FC<ResultsProps> = ({ metrics, onRestart }) => {
+export const Results: React.FC<ResultsProps> = ({
+    metrics,
+    onRestart,
+    onBackToMenu,
+}) => {
     return (
         <div className='results-container'>
             <div className='results-content'>
@@ -46,9 +51,16 @@ export const Results: React.FC<ResultsProps> = ({ metrics, onRestart }) => {
 
                 <p className='thank-you'>Thank you for participating!</p>
 
-                <button onClick={onRestart} className='restart-button'>
-                    Run Again
-                </button>
+                <div className='action-buttons'>
+                    <button onClick={onRestart} className='restart-button'>
+                        Run Again
+                    </button>
+                    {onBackToMenu && (
+                        <button onClick={onBackToMenu} className='menu-button'>
+                            Back to Menu
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );

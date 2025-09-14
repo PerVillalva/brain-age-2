@@ -1,0 +1,128 @@
+.stroop-difficulty-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f5f5f5;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif;
+    outline: none;
+    padding: 2rem 0;
+}
+
+.stroop-difficulty-content {
+    text-align: center;
+    max-width: 600px;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.stroop-difficulty-content h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    color: #333;
+}
+
+.difficulty-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.difficulty-option {
+    padding: 2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.difficulty-option.easy {
+    background: #e8f5e8;
+    border-color: #2d5a2d;
+}
+
+.difficulty-option.easy:hover {
+    background: #d4f0d4;
+    transform: translateY(-2px);
+}
+
+.difficulty-option.hard {
+    background: #ffe8e8;
+    border-color: #8b2635;
+}
+
+.difficulty-option.hard:hover {
+    background: #ffd4d4;
+    transform: translateY(-2px);
+}
+
+.difficulty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.difficulty-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #666;
+}
+
+.color-example {
+    margin: 1rem 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.difficulty-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 2rem;
+}
+
+.difficulty-button {
+    background: #4a90e2;
+    border: 2px solid #4a90e2;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 10px;
+}
+
+.difficulty-button:hover {
+    background: #357abd;
+    border-color: #357abd;
+    transform: translateY(-2px);
+}
+
+.difficulty-button.easy {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.difficulty-button.easy:hover {
+    background: #218838;
+    border-color: #218838;
+}
+
+.difficulty-button.hard {
+    background: #dc3545;
+    border-color: #dc3545;
+}
+
+.difficulty-button.hard:hover {
+    background: #c82333;
+    border-color: #c82333;
+}

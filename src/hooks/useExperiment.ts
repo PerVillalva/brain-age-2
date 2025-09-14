@@ -110,6 +110,8 @@ export const useExperiment = () => {
                                         ...prev,
                                         currentTrial: prev.currentTrial + 1,
                                         phase: 'fixation',
+                                        feedbackMessage: undefined,
+                                        isFadingOut: false,
                                     };
                                 } else {
                                     return { ...prev, phase: 'results' };
@@ -171,15 +173,19 @@ export const useExperiment = () => {
 
             // Move to next trial after feedback
             setTimeout(() => {
-                if (state.currentTrial < state.trialData.length - 1) {
-                    setState((prev) => ({
-                        ...prev,
-                        currentTrial: prev.currentTrial + 1,
-                        phase: 'fixation',
-                    }));
-                } else {
-                    setState((prev) => ({ ...prev, phase: 'results' }));
-                }
+                setState((prev) => {
+                    if (prev.currentTrial < prev.trialData.length - 1) {
+                        return {
+                            ...prev,
+                            currentTrial: prev.currentTrial + 1,
+                            phase: 'fixation',
+                            feedbackMessage: undefined,
+                            isFadingOut: false,
+                        };
+                    } else {
+                        return { ...prev, phase: 'results' };
+                    }
+                });
             }, EXPERIMENT_CONFIG.feedbackDuration + EXPERIMENT_CONFIG.postTrialGap);
         },
         [

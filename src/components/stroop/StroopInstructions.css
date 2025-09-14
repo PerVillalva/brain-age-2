@@ -1,0 +1,80 @@
+.stroop-instructions-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f5f5f5;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif;
+    outline: none;
+    padding: 2rem;
+}
+
+.stroop-instructions-content {
+    max-width: 800px;
+    text-align: left;
+    line-height: 1.6;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stroop-instructions-content h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+}
+
+.stroop-instructions-content p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.color-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.color-card {
+    width: 80px;
+    height: 80px;
+    border: 3px solid #333;
+    border-radius: 12px;
+}
+
+.color-labels {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 2rem;
+}
+
+.continue-prompt {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.start-button {
+    display: block;
+    margin: 0 auto;
+    background: #4a90e2;
+    border: 2px solid #4a90e2;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.start-button:hover {
+    background: #357abd;
+    border-color: #357abd;
+    transform: translateY(-2px);
+}
